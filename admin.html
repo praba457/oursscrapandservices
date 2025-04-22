@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Location Logs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        .logs-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f9f9f9;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .log-entry iframe {
+            width: 50%;
+            height: 200px;
+            border-radius: 8px;
+            border: none;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #ff3b30;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h2>📊 Visitor Location Logs</h2>
+    <button onclick="clearLogs()">Clear All Logs</button>
+    <div id="logs" class="logs-container">Loading...</div>
+
+    <!-- Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <script>
+        // Fetch and display logs from Firebase
+        db.collection("clicks").orderBy("timestamp", "desc").get().then(snapshot => {
+            const container = document.getElementById("logs");
+            container.innerHTML = "";
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const date = new Date(data.timestamp.toDate()).toLocaleString();
+
+                const entry = document.createElement("div");
+                entry.classList.add("log-entry");
+
+                entry.innerHTML = `
+                    <div><strong>ID:</strong> ${data.id}<br><
